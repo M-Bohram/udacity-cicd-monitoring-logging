@@ -41,17 +41,12 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [frontend-build]
       - run:
           name: Build front-end
           command: |
             cd frontend
             npm install
             npm run build
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -61,17 +56,12 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
       - run:
           name: Back-end build
           command: |
             cd backend
             npm install
             npm run build
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -81,17 +71,12 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [frontend-test]
       - run:
           name: Front-end test
           command: |
             cd frontend
             npm install
             npm test
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-test
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -101,17 +86,12 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-test]
       - run:
           name: Back-end test
           command: |
             cd backend
             npm install
             npm test
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-test
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -121,16 +101,11 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [frontend-scan]
       - run:
           name: Front-end scan
           command: |
             cd frontend
             npm audit --audit-level=critical
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-scan
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -140,16 +115,11 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-scan]
       - run:
           name: Back-end scan
           command: |
             cd backend
             npm audit --audit-level=critical
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-scan
       - slack/notify:
           event: fail
           template: basic_fail_1
