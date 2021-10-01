@@ -119,7 +119,7 @@ jobs:
           name: Back-end scan
           command: |
             cd backend
-            npm audit --audit-level=critical
+            npm audit fix --audit-level=critical --force
       - slack/notify:
           event: fail
           template: basic_fail_1
