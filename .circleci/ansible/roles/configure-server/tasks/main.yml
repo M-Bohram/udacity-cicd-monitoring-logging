@@ -6,7 +6,7 @@
     update_cache: yes
     state: latest
 
-- name: Install nvm
+- name: Install n by NPM
   become: yes
   npm:
     name: n

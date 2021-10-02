@@ -173,7 +173,7 @@ jobs:
           paths:
             - inventory.txt
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   configure-infrastructure:
     docker:
@@ -187,7 +187,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add python curl ansible
+            apk add curl ansible
             curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
             unzip awscli-bundle.zip
             ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
@@ -196,7 +196,7 @@ jobs:
           command: |
             ansible-playbook -i /tmp/.circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   run-migrations:
     docker:
@@ -234,9 +234,9 @@ jobs:
           name: Send migration results to memstash
           command: |
             if cat migration-log.txt | grep "has been executed successfully"; then
-              curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" \
+              curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" \
                 --request PUT --data "1" \
-                https://api.memstash.io/values/migration-"${CIRCLE_WORKFLOW_ID}"
+                https://api.memstash.io/values/migration-"${CIRCLE_WORKFLOW_ID:0:7}"
             fi
       - persist_to_workspace:
           root: ~/project
@@ -244,10 +244,10 @@ jobs:
             - backend
 
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   deploy-frontend:
     docker:
@@ -263,7 +263,7 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            export BACKEND_IP=$(curl -H "token: ${CIRCLE_WORKFLOW_ID}" \
+            export BACKEND_IP=$(curl -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" \
               --request GET https://api.memstash.io/values/backendurl)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}" > .circleci/cache.txt
@@ -275,10 +275,10 @@ jobs:
             cd frontend
             npm i
             npm run build
-            aws s3 cp dist s3://udapeople-"${CIRCLE_WORKFLOW_ID}" --recursive
+            aws s3 cp dist s3://udapeople-"${CIRCLE_WORKFLOW_ID:0:7}" --recursive
 
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID}
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   deploy-backend:
     docker:
@@ -292,8 +292,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk update
-            apk add --update ansible aws-cli openssh-client tar
+            apk add ansible openssh-client tar curl
+            curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+            unzip awscli-bundle.zip
+            ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
       - run:
           name: Deploy backend
           command: |
@@ -303,7 +305,7 @@ jobs:
             ansible-playbook -i /tmp/artifacts/inventory.txt deploy-backend.yml
 
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 #   smoke-test:
 #     docker:
