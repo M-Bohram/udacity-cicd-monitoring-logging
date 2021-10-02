@@ -164,7 +164,8 @@ jobs:
               --request GET https://api.memstash.io/values/backendurl)
             echo "${BACKEND_URL}" >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-      - run: name: Install tar and gzip libraries
+      - run:
+          name: Install tar and gzip libraries
           command: |
             yum -y install tar gzip 
       - persist_to_workspace:
