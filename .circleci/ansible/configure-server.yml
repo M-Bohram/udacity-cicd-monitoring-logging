@@ -1,5 +1,4 @@
 ---
-
 - name: Configuration play
   hosts: web
   user: ubuntu
@@ -28,7 +27,6 @@
       apt:
         name: python3
         state: latest
-
   roles:
     - configure-server
     - configure-prometheus-node-exporter
