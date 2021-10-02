@@ -10,6 +10,7 @@
   shell: |
     cd /home/ubuntu
     tar xvzf artifact.tar.gz -C .
+
 - name: Start server
   become: true
   shell: |
