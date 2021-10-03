@@ -377,20 +377,11 @@ jobs:
               --request PUT --data "${STACKS[@]}" \
                 https://api.memstash.io/values/stacks
 
-            if [ -z "${OldWorkflowID}" ]
-            then
-              aws cloudformation deploy \
-                --template-file .circleci/files/cloudfront.yml \
-                --stack-name udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7} \
-                --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-                --tags project=udapeople
-            else
-              aws cloudformation update-stack \
-                --template-file .circleci/files/cloudfront.yml \
-                --stack-name udapeople-cloudfront-${OldWorkflowID} \
-                --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7},UsePreviousValue=false \
-                --tags project=udapeople
-            fi
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --stack-name udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7} \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udapeople
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
