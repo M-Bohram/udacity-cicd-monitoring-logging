@@ -330,6 +330,7 @@ jobs:
           command: |
             BACKEND_IP=$(cat backend-url.txt)
             URL="http://${BACKEND_IP}:3030/api/status"
+            echo "${URL}"
             curl -s ${URL}
       - run:
           name: Frontend smoke test.
