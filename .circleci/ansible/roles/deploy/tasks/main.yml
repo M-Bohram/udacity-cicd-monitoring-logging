@@ -11,8 +11,15 @@
     cd /home/ubuntu
     tar xvzf artifact.tar.gz -C .
 
+- name: Install Dependencies and Build
+  become: true
+  shell: |
+    cd /home/ubuntu
+    npm install
+    npm run build
+
 - name: Start server
   become: true
   shell: |
     cd /home/ubuntu
-    pm2 start npm --name backend -- start
+    pm2 start "npm run start:prod" --name backend
