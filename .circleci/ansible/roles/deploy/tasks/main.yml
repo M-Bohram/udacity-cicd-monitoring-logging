@@ -16,10 +16,9 @@
   shell: |
     cd /home/ubuntu
     npm install
-    npm run build
 
 - name: Start server
   become: true
   shell: |
     cd /home/ubuntu
-    pm2 start "npm run start:prod" --name backend
+    pm2 start "npm start" --name backend
