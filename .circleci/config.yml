@@ -146,7 +146,7 @@ jobs:
               --query "Stacks[0].Outputs[?OutputKey=='BackendURL'].OutputValue" \
               --no-paginate --output text)
             echo $BACKEND_URL
-            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID}" \
+            curl -H "Content-Type: text/plain" -H "token: ${CIRCLE_WORKFLOW_ID:0:7}" \
               --request PUT --data "${BACKEND_URL}" \
               https://api.memstash.io/values/backendurl
       - run:
