@@ -1,20 +1,10 @@
 ---
-- name: Install NPM
+- name: Install npm and nodejs
   become: yes
-  apt:
-    name: npm
-    update_cache: yes
-    state: latest
-
-- name: Install n by NPM
-  become: yes
-  npm:
-    name: n
-    global: yes
-
-- name: Install nodejs v13.8.0
-  become: yes
-  command: n 13.8.0
+  shell: |
+    apt install -y npm
+    npm install --global n
+    n 13.8.0
 
 - name: Installing PM2
   become: yes
